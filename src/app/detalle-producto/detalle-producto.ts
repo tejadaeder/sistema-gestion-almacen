@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ProductoService } from '../producto-service';
+import { Producto, ProductoService } from '../producto-service';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -12,16 +12,26 @@ import { ProductoService } from '../producto-service';
   templateUrl: './detalle-producto.html'
 })
 export class DetalleProducto implements OnInit{
-  productoSeleccionado: any;
+  productoSeleccionado: Producto | undefined;
 
   constructor(private route: ActivatedRoute,
     private productoService: ProductoService) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.productoSeleccionado = this.productoService.obtenerProductoPorId(id);
+    const productoEnviado = history.state?.producto as Producto | undefined;
+
+    if (productoEnviado) {
+      this.productoSeleccionado = productoEnviado;
+    } else if (id) {
+      this.productoService.obtenerProductoPorId(id).subscribe({
+        next: (producto) => {
+          this.productoSeleccionado = producto;
+        },
+        error: (error) => {
+          console.error('Error al obtener producto:', error);
+        }
+      });
     }
-    
- }
+  }
 }

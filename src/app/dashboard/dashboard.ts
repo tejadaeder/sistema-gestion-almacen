@@ -24,15 +24,20 @@ export class Dashboard implements AfterViewInit {
 
   ngAfterViewInit(): void {
      
-    const productos = this.productoService.obtenerProductos();
-
+    this.productoService.obtenerProductos().subscribe({
+      next: (productos) => {
     this.dibujarGraficoBarras(productos);
     this.dibujarGraficoTorta(productos);
     this.dibujarGraficoLineas();
+  },
+  error: (error) => {
+    console.error('Error al obtener productos:', error);
+  }
+    });
   }
 
   dibujarGraficoBarras(productos: any[]){
-    const categorias = ['Ferretería','Electricidad','Pintura','Plomería','Muebles'];
+    const categorias = ['Ferretería','Electricidad','Pinturas','Construcción','Seguridad Industrial'];
     const stockPorCategoria = categorias.map(cat => {
       return productos.filter(p => p.categoria === cat)
       .reduce((suma,p)=> suma + p.stock,0);

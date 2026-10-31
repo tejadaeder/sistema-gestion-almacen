@@ -20,7 +20,7 @@ export class TablaProductos {
     this.dataSource.data = value;
   }
 
-  columnas: string[] = ['id', 'nombre', 'categoria', 'stock', 'acciones'];
+  columnas: string[] = ['id', 'nombre', 'categoria', 'stock','precio','valor_inventario','acciones'];
   dataSource = new MatTableDataSource<any>([]);
 
 }

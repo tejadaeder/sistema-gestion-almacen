@@ -28,11 +28,30 @@
     </td>
   </ng-container>
 
+  <ng-container matColumnDef="precio">
+    <th mat-header-cell *matHeaderCellDef> Precio </th>
+    <td mat-cell *matCellDef="let prod"> 
+      <strong>{{ prod.precio }} S/.</strong> 
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="valor_inventario">
+    <th mat-header-cell *matHeaderCellDef> Valor de Inventario </th>
+    <td mat-cell *matCellDef="let prod"> 
+      <strong>{{ prod.valor_inventario }} S/.</strong> 
+    </td>
+  </ng-container>
+
+
   <!-- Columna Acciones -->
   <ng-container matColumnDef="acciones">
     <th mat-header-cell *matHeaderCellDef> Acciones </th>
     <td mat-cell *matCellDef="let prod">
-      <button mat-raised-button color="primary" [routerLink]="['/producto', prod.id]">
+      <button
+        mat-raised-button
+        color="primary"
+        [routerLink]="['/detalle-producto', prod.id]"
+        [state]="{ producto: prod }">
         Ver Detalle
       </button>
     </td>

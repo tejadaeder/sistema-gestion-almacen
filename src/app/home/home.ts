@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component,inject,OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,19 +14,32 @@ import { ProductoService } from '../producto-service';
 })
 export class Home implements OnInit {
 
+  private productoService = inject(ProductoService);
+  private cdr = inject(ChangeDetectorRef);
+
   productosEnPantalla: any[] = [];
-  constructor(private productoService: ProductoService) {}
+  productosOriginales: any[] = [];
+
 
   ngOnInit(): void {
-    this.productosEnPantalla = this.productoService.obtenerProductos();
-
+    this.productoService.obtenerProductos().subscribe({
+      next: (productos) => {
+        this.productosEnPantalla = productos;
+        this.productosOriginales = productos;
+        
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error al cargar productos:', err)
+    });
   }
 
   filtrarPorCategoria(categoria: string) {
     if(categoria === 'Todas') {
-      this.productosEnPantalla = this.productoService.obtenerProductos();
+      this.productosEnPantalla = this.productosOriginales;
     } else {
-      this.productosEnPantalla = this.productoService.buscarPorCategoria(categoria);
+      this.productosEnPantalla = this.productosOriginales.filter(p => p.categoria === categoria && p.categoria.trim().toLowerCase() === categoria.trim().toLowerCase()
+    );
     }
-  }
+        
+}
 }
